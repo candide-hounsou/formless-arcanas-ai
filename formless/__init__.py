@@ -3,4 +3,4 @@
 Reference project for audit-grade, liability-aware financial decisions.
 """
 
-__all__ = ["core", "ledger"]
+__all__ = ["core", "ledger", "agents", "evaluators"]
