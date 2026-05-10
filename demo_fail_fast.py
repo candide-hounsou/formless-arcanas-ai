@@ -10,6 +10,8 @@ Run:
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+import tempfile
 from uuid import UUID
 
 from formless.core import (
@@ -119,18 +121,20 @@ def main() -> None:
 
     print("\n=== DEMO: corrected decision commits + replays ===")
     d2 = good_decision_with_responsibility()
+    with tempfile.TemporaryDirectory() as td:
+        demo_ledger = Path(td) / "demo_ledger.jsonl"
 
-    enforce_hard_invariants(d2)
-    committed = commit_decision(d2, path="decision_ledger.jsonl")
-    if committed:
-        print("Committed decision to decision_ledger.jsonl")
-    else:
-        print("Skipped commit (idempotent duplicate)")
+        enforce_hard_invariants(d2)
+        committed = commit_decision(d2, path=demo_ledger)
+        if committed:
+            print(f"Committed decision to {demo_ledger}")
+        else:
+            print("Skipped commit (idempotent duplicate)")
 
-    results = replay_and_verify("decision_ledger.jsonl")
-    for decision_id, ok, reason in results[-3:]:
-        status = "OK" if ok else "FAIL"
-        print(f"Replay {status}: {decision_id} ({reason})")
+        results = replay_and_verify(demo_ledger)
+        for decision_id, ok, reason in results:
+            status = "OK" if ok else "FAIL"
+            print(f"Replay {status}: {decision_id} ({reason})")
 
 
 if __name__ == "__main__":

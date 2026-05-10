@@ -72,6 +72,12 @@ def evaluate_policy(decision: DecisionRecord, snapshot: PolicySnapshot, *, now: 
         if not any(lb.section.startswith(rule.mandatory_legal_basis_prefix) for lb in decision.legal_basis):
             failed_rules.append(f"{rule.rule_id}:legal_basis")
             score -= 0.5
+        for lb in decision.legal_basis:
+            instrument = lb.instrument.lower()
+            section = lb.section.lower()
+            if "ignore previous instructions" in instrument or "ignore previous instructions" in section:
+                failed_rules.append(f"{rule.rule_id}:prompt_injection_signal")
+                score -= 0.5
 
     if failed_rules:
         return PolicyEvaluation(
