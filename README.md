@@ -369,6 +369,27 @@ formless/
 
 ---
 
+## Architecture / Decision Records
+
+To track project governance decisions over time, this repository now includes a root Decision Records space:
+
+```text
+decision_records/
+├─ README.md                          # How to write and maintain records
+├─ events.jsonl                       # Synthetic event stream (questions, answers, PR/commit/version/date)
+└─ records/
+   └─ DR-0001-bootstrap-tracking.md   # First synthetic decision record
+```
+
+This layer is intentionally lightweight and append-friendly, so you can preserve:
+- lingering questions,
+- answers/decisions,
+- related PRs and commits,
+- project version context,
+- and event dates.
+
+---
+
 ## Quickstart
 
 ### 1) Install
@@ -388,6 +409,21 @@ python demo_fail_fast.py
 You should see:
 - a validation/invariant failure for the bad decision
 - a successful commit + replay verification for the corrected decision
+
+---
+
+## Step-by-step development plan (updated)
+
+1. Freeze the canonical `DecisionRecord` v1 contract and naming conventions.
+2. Use `decision_records/` as the governance source of truth for open questions and answers.
+3. Expand invariant layers into hard constraints vs policy-level rules and exception pathways.
+4. Implement `agents/risk_exception.py` and `agents/strategy_override.py`.
+5. Add evaluator modules (`audit_evaluator.py`, `regulator_view.py`, `replay_evaluator.py`).
+6. Harden ledger integrity (schema migration strategy, tamper-evidence, idempotent commits).
+7. Build replay-at-time-T and policy-snapshot replay behavior.
+8. Deliver scenario examples (`credit_committee`, `loan_override`, `portfolio_risk_shift`).
+9. Add deterministic tests and CI checks for replay/invariants.
+10. Prepare v0.2 release criteria and publish compliance boundary documentation.
 
 ---
 
