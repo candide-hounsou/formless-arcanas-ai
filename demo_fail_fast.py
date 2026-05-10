@@ -10,8 +10,7 @@ Run:
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
-
-from pydantic import ValidationError
+from uuid import UUID
 
 from formless.core import (
     Actor,
@@ -22,7 +21,7 @@ from formless.core import (
     Recommendation,
     ResponsibilityGraph,
     TemporalValidity,
-    enforce_invariants,
+    enforce_hard_invariants,
 )
 from formless.ledger import commit_decision, compute_replay_hash, replay_and_verify
 
@@ -46,19 +45,21 @@ def bad_decision_missing_responsibility() -> DecisionRecord:
     t0 = now_utc()
     temporal = TemporalValidity(valid_from=t0 - timedelta(minutes=1), expires_at=t0 + timedelta(days=30))
 
-    # Intentionally empty responsibility graph -> should fail invariants immediately.
     responsibility = ResponsibilityGraph(actors=[], edges=[])
 
     provisional = DecisionRecord(
-        decision_id="DEC-0001",
+        decision_id=UUID("018f4f8e-7b57-7cc1-bf8e-43f054f4e3d1"),
         created_at=t0,
         context=make_context(),
         recommendation=Recommendation.APPROVE,
         confidence=0.82,
         responsibility=responsibility,
-        legal_basis=[LegalBasisReference(instrument="Internal Credit Policy", section="§2.1")],
+        legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.511-41-1")],
         temporal=temporal,
-        replay_hash="0" * 64,  # will be replaced in corrected version
+        policy_snapshot_id="POL-FR-2026-01",
+        model_provider="openai",
+        model_version="gpt-4o-mini",
+        replay_hash="0" * 64,
     )
     return provisional
 
@@ -69,30 +70,38 @@ def good_decision_with_responsibility() -> DecisionRecord:
 
     responsibility = ResponsibilityGraph(
         actors=[
-            Actor(actor_id="human:credit_officer", role=ActorRole.HUMAN, display_name="Credit Officer", accountable=True),
+            Actor(
+                actor_id="human:credit_officer",
+                role=ActorRole.HUMAN,
+                display_name="Credit Officer",
+                accountable=True,
+                accountability_role="credit_officer",
+                authority_level=8,
+            ),
             Actor(actor_id="ai:triage", role=ActorRole.AI_SYSTEM, display_name="Triage Agent", accountable=False),
             Actor(actor_id="org:bank", role=ActorRole.ORG, display_name="Bank Entity", accountable=False),
         ],
         edges=[
-            # AI informs, human approves
             {"src": "ai:triage", "dst": "human:credit_officer", "relation": "recommended"},
             {"src": "human:credit_officer", "dst": "org:bank", "relation": "approved_for"},
         ],
     )
 
     provisional = DecisionRecord(
-        decision_id="DEC-0002",
+        decision_id=UUID("018f4f8e-7b57-7cc1-bf8e-43f054f4e3d2"),
         created_at=t0,
         context=make_context(),
         recommendation=Recommendation.APPROVE,
         confidence=0.82,
         responsibility=responsibility,
-        legal_basis=[LegalBasisReference(instrument="Internal Credit Policy", section="§2.1")],
+        legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.511-41-1")],
         temporal=temporal,
+        policy_snapshot_id="POL-FR-2026-01",
+        model_provider="openai",
+        model_version="gpt-4o-mini",
         replay_hash="0" * 64,
     )
 
-    # Compute replay hash from canonical content
     rh = compute_replay_hash(provisional)
     return provisional.model_copy(update={"replay_hash": rh})
 
@@ -102,7 +111,7 @@ def main() -> None:
 
     try:
         d1 = bad_decision_missing_responsibility()
-        enforce_invariants(d1)
+        enforce_hard_invariants(d1)
         print("UNEXPECTED: bad decision passed invariants")
     except Exception as e:
         print("OK: decision rejected immediately")
@@ -111,10 +120,12 @@ def main() -> None:
     print("\n=== DEMO: corrected decision commits + replays ===")
     d2 = good_decision_with_responsibility()
 
-    # Enforce invariants before committing
-    enforce_invariants(d2)
-    commit_decision(d2, path="decision_ledger.jsonl")
-    print("Committed DEC-0002 to decision_ledger.jsonl")
+    enforce_hard_invariants(d2)
+    committed = commit_decision(d2, path="decision_ledger.jsonl")
+    if committed:
+        print("Committed decision to decision_ledger.jsonl")
+    else:
+        print("Skipped commit (idempotent duplicate)")
 
     results = replay_and_verify("decision_ledger.jsonl")
     for decision_id, ok, reason in results[-3:]:

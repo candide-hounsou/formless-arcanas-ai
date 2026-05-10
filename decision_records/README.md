@@ -1,16 +1,17 @@
 # Decision Records
 
-This folder stores **Architecture / Decision Decision Records** for project governance.
+This folder stores Architecture/Decision Records for project governance.
 
 ## Purpose
 
-Track, over time:
+Track over time:
 - lingering questions,
 - answers and rationale,
 - related PRs,
 - related commits,
 - project version at decision time,
-- event dates.
+- event dates,
+- ADR follow-up suggestions for unresolved strategic items.
 
 ## Structure
 
@@ -22,7 +23,7 @@ Track, over time:
 1. Add/update a record in `records/`.
 2. Append one or more events to `events.jsonl`.
 3. Reference PR + commit + version in both places.
-4. Keep unresolved items in a `Lingering questions` section until answered.
+4. Keep unresolved items in a `Lingering questions` or `ADR follow-up suggestions` section until closure.
 
 ## Naming convention
 
