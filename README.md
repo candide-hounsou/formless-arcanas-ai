@@ -350,7 +350,7 @@ It is **a different category of system**.
 ## Architecture overview
 
 ```text
-formless_arcanas_ai/
+formless/
 ├─ core/
 │  ├─ decision.py            # Canonical decision schema
 │  ├─ responsibility.py     # Responsibility graph model

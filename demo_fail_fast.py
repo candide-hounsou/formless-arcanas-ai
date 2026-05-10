@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 
 from pydantic import ValidationError
 
-from formless_arcanas_ai.core import (
+from formless.core import (
     Actor,
     ActorRole,
     DecisionRecord,
@@ -24,7 +24,7 @@ from formless_arcanas_ai.core import (
     TemporalValidity,
     enforce_invariants,
 )
-from formless_arcanas_ai.ledger import commit_decision, compute_replay_hash, replay_and_verify
+from formless.ledger import commit_decision, compute_replay_hash, replay_and_verify
 
 
 def now_utc() -> datetime:
