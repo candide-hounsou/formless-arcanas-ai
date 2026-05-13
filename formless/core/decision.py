@@ -26,19 +26,21 @@ class LegalBasisReference(BaseModel):
 
 
 class FinancialContext(BaseModel):
-    """Input context for a decision. v1 is scoped to France only."""
+    """Input context for a decision. v1 is scoped to EU/US only."""
 
     client_id: str = Field(..., min_length=2)
     product: str = Field(..., min_length=2, description="e.g., SME_loan, mortgage")
     amount: float = Field(..., gt=0)
     currency: str = Field(..., min_length=3, max_length=3)
-    jurisdiction: str = Field(..., description="Must be FR for v1")
+    jurisdiction: str = Field(..., description="Must be EU or US for v1")
     risk_signals: Dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def _validate_scope(self) -> "FinancialContext":
-        if self.jurisdiction.upper() != "FR":
-            raise ValueError("v1 scope is FR only")
+        allowed = {"EU", "US"}
+        jurisdiction = self.jurisdiction.strip().upper()
+        if jurisdiction not in allowed:
+            raise ValueError("v1 scope is EU/US only")
         return self
 
 

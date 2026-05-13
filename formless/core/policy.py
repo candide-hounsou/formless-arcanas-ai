@@ -31,7 +31,7 @@ class PolicySnapshot(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     snapshot_id: str = Field(..., min_length=3)
-    jurisdiction: str = Field(default="FR")
+    jurisdiction: str = Field(default="EU")
     valid_from: datetime
     valid_to: datetime
     rules: list[PolicyRule]
@@ -51,8 +51,8 @@ class PolicyEvaluation(BaseModel):
 def evaluate_policy(decision: DecisionRecord, snapshot: PolicySnapshot, *, now: datetime | None = None) -> PolicyEvaluation:
     now = now or datetime.now(timezone.utc)
 
-    if snapshot.jurisdiction.upper() != "FR":
-        raise ValueError("Only FR policy snapshots are supported in v1")
+    if snapshot.jurisdiction.strip().upper() not in {"EU", "US"}:
+        raise ValueError("Only EU/US policy snapshots are supported in v1")
     if not (snapshot.valid_from <= now < snapshot.valid_to):
         return PolicyEvaluation(
             snapshot_id=snapshot.snapshot_id,
