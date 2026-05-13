@@ -4,6 +4,10 @@
 
 `formless-arcanas-ai` demonstrates deterministic, auditable, liability-aware AI decisioning for regulated finance.
 
+This project is exploratory, conceptual and designed to start discussions, not end them.
+
+All suggestions, infos or use cases are welcomed !
+
 ## Current scope (v0.1.x)
 
 - **Jurisdiction:** FR only
