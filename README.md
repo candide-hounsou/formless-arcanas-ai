@@ -205,6 +205,11 @@ The system flags the decision as expired, not “wrong”.
 
 This distinction matters in real audits.
 
+## Real cases (research)
+
+Research briefs for EU/US real-world use cases live in `real_cases/`.
+These drafts map regulatory drivers to DecisionRecord requirements and must be source-verified before use.
+
 ## What this project demonstrates
 
 That agentic AI can be audit‑grade
