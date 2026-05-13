@@ -65,7 +65,7 @@ def build_synthetic_loan_override_decision() -> tuple[DecisionRecord, str]:
         recommendation=Recommendation.APPROVE,
         confidence=0.72,
         responsibility=overridden_graph,
-        legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.533-4")],
+        legal_basis=[LegalBasisReference(instrument="12 CFR Part 30", section="Section 30.3")],
         temporal=TemporalValidity(valid_from=t0, expires_at=t0 + timedelta(days=30)),
         policy_snapshot_id="POL-US-2026-01",
         model_provider="openai",
