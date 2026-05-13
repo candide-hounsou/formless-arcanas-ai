@@ -33,7 +33,7 @@ class PolicyAndReplayTests(unittest.TestCase):
                 product="SME_loan",
                 amount=200_000,
                 currency="EUR",
-                jurisdiction="FR",
+                jurisdiction="EU",
                 risk_signals={},
             ),
             recommendation=Recommendation.APPROVE,
@@ -53,7 +53,7 @@ class PolicyAndReplayTests(unittest.TestCase):
             ),
             legal_basis=[LegalBasisReference(instrument=instrument, section=section)],
             temporal=TemporalValidity(valid_from=t0 - timedelta(minutes=1), expires_at=t0 + timedelta(days=1)),
-            policy_snapshot_id="POL-FR-2026-01",
+            policy_snapshot_id="POL-EU-2026-01",
             model_provider="openai",
             model_version="gpt-4o-mini",
             replay_hash="0" * 64,
@@ -62,8 +62,8 @@ class PolicyAndReplayTests(unittest.TestCase):
 
     def _snapshot(self, now: datetime) -> PolicySnapshot:
         return PolicySnapshot(
-            snapshot_id="POL-FR-2026-01",
-            jurisdiction="FR",
+            snapshot_id="POL-EU-2026-01",
+            jurisdiction="EU",
             valid_from=now - timedelta(days=1),
             valid_to=now + timedelta(days=1),
             rules=[PolicyRule(rule_id="R-001", description="Approval confidence and legal basis checks")],

@@ -38,7 +38,7 @@ def make_context() -> FinancialContext:
         product="SME_loan",
         amount=250_000,
         currency="EUR",
-        jurisdiction="FR",
+        jurisdiction="EU",
         risk_signals={"dscr": 1.1, "late_payments_12m": 2},
     )
 
@@ -58,7 +58,7 @@ def bad_decision_missing_responsibility() -> DecisionRecord:
         responsibility=responsibility,
         legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.511-41-1")],
         temporal=temporal,
-        policy_snapshot_id="POL-FR-2026-01",
+        policy_snapshot_id="POL-EU-2026-01",
         model_provider="openai",
         model_version="gpt-4o-mini",
         replay_hash="0" * 64,
@@ -98,7 +98,7 @@ def good_decision_with_responsibility() -> DecisionRecord:
         responsibility=responsibility,
         legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.511-41-1")],
         temporal=temporal,
-        policy_snapshot_id="POL-FR-2026-01",
+        policy_snapshot_id="POL-EU-2026-01",
         model_provider="openai",
         model_version="gpt-4o-mini",
         replay_hash="0" * 64,

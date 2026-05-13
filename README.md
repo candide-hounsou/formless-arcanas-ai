@@ -123,7 +123,7 @@ A DecisionRecord is immutable once committed.
 
 ## Current scope (v0.1.x)
 
-- **Jurisdiction:** FR only
+- **Jurisdiction:** EU/US
 - **Decision ID:** UUIDv7 required
 - **Liability model:** explicit responsibility graph with transfer-aware overrides
 - **Replay model:** tamper-evident hash chain + deterministic replay hash verification

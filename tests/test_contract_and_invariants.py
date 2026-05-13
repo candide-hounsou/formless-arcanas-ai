@@ -29,7 +29,7 @@ class ContractTests(unittest.TestCase):
                 product="SME_loan",
                 amount=100_000,
                 currency="EUR",
-                jurisdiction="FR",
+                jurisdiction="EU",
                 risk_signals={},
             ),
             recommendation=Recommendation.APPROVE,
@@ -49,7 +49,7 @@ class ContractTests(unittest.TestCase):
             ),
             legal_basis=[LegalBasisReference(instrument="Code monétaire et financier", section="Article L.511-41-1")],
             temporal=TemporalValidity(valid_from=t0 - timedelta(minutes=1), expires_at=t0 + timedelta(days=1)),
-            policy_snapshot_id="POL-FR-2026-01",
+            policy_snapshot_id="POL-EU-2026-01",
             model_provider="openai",
             model_version="gpt-4o-mini",
             replay_hash="0" * 64,
@@ -59,16 +59,26 @@ class ContractTests(unittest.TestCase):
     def test_hard_invariants_pass(self) -> None:
         enforce_hard_invariants(self._decision())
 
-    def test_non_fr_scope_rejected(self) -> None:
+    def test_non_eu_us_scope_rejected(self) -> None:
         with self.assertRaises(ValueError):
             FinancialContext(
                 client_id="T-002",
                 product="SME_loan",
                 amount=100_000,
                 currency="EUR",
-                jurisdiction="EU",
+                jurisdiction="BR",
                 risk_signals={},
             )
+
+    def test_us_scope_accepted(self) -> None:
+        FinancialContext(
+            client_id="T-003",
+            product="SME_loan",
+            amount=100_000,
+            currency="USD",
+            jurisdiction="US",
+            risk_signals={},
+        )
 
 
 if __name__ == "__main__":
