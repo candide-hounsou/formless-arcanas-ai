@@ -2,8 +2,9 @@
 
 **A liability-aware financial decision reference implementation built with Pydantic AI**
 
-_"If your agent cannot explain who is responsible for a decision, it should not make one !"_
---------------------------------------------------------------------------------------------------------------------------------------------
+"If your agent cannot explain who is responsible for a decision, it should not make one !"
+-------------------------------------------------------------------------------------------------------------------------------------------
+
 formless‑arcanas‑ai is an open‑source reference project that demonstrates a class of agentic systems that most AI frameworks cannot express:
 
 Deterministic, auditable, liability-aware AI decisioning for regulated finance
@@ -15,8 +16,11 @@ All ideas, suggestions, infos or use cases are welcomed !
 Instead of optimizing for “best answer”, formless‑arcanas‑ai optimizes for:
 
 Defensibility
+
 Replayability
+
 Responsibility attribution
+
 Temporal validity
 
 This project exists to show what becomes possible when strong typing, schema validation, and agentic reasoning are treated as first‑class invariants, not optional safeguards.
@@ -41,10 +45,15 @@ formless‑arcanas‑ai answers those questions by construction.
 ## What formless‑arcanas‑ai is not
 
 ❌ a chatbot
+
 ❌ a RAG system
+
 ❌ a scoring model
+
 ❌ a workflow engine
+
 ❌ a replacement for quantitative models
+
 
 This project does not try to outperform financial models.
 It exists around them — where governance, auditability, and responsibility live.
@@ -54,23 +63,27 @@ It exists around them — where governance, auditability, and responsibility liv
 Every AI‑assisted financial decision is treated as a Decision Record that must satisfy non‑negotiable invariants.
 A decision that is:
 
-not attributable,
-not replayable,
-not time‑bounded,
+❌ not attributable,
+
+❌ not replayable,
+
+❌ not time‑bounded,
+
 
 is considered invalid, regardless of how “reasonable” it sounds.
 
 #" What makes this project different
+
 1. Decisions are structured, not textual
 Every decision is a validated object, not free‑form text.
-Decision = Data + Responsibility + Time + Legal Basis
+* Decision = Data + Responsibility + Time + Legal Basis*
 
 2. Responsibility is explicit
 Each decision carries a Responsibility Graph:
 
 AI components involved
-Human overrides
-Organizational roles
+Human overrides 
+Organizational roles 
 Escalation paths
 
 3. Time is a first‑class constraint
